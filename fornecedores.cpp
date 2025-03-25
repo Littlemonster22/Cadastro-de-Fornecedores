@@ -21,8 +21,7 @@ void salvarFornecedores(const TabelaFornecedor &tabela);
 void LiberarMemoria(TabelaFornecedor &tabela);
 bool verificarIdExistente(TabelaFornecedor &tabela, int codigo);
 void formataContato(char contato[]);
-void VerificarCadastro(Fornecedor &f, TabelaFornecedor &tabela);
-//void quantidadeCadastros(TabelaFornecedor &tabela);
+void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela);
 
 int main()
 {
@@ -43,7 +42,7 @@ int main()
         switch (esc){
 
             case 1: Cadastrar(tabela,f);
-                    VerificarCadastro(f,tabela);
+                    confirmarCadastro(f,tabela);
                     salvarFornecedores(tabela);
                     break;
 
@@ -130,11 +129,11 @@ void formataContato(char contato[])
 
 void Cadastrar(TabelaFornecedor &tabela, Fornecedor &f) {
 
-    bool idDiferente = false;
+    bool codigoDiferente = false;
     bool contatoValido = false;
 
     do{
-        cout << "Informe o código: ";
+        cout << "Informe o código do fornecedor: ";
         cin >> f.codigo;
         cin.ignore();
 
@@ -143,9 +142,9 @@ void Cadastrar(TabelaFornecedor &tabela, Fornecedor &f) {
             getch();
             clrscr();
         }else
-            idDiferente = true;
+            codigoDiferente = true;
 
-    }while(!idDiferente);
+    }while(!codigoDiferente);
 
     cout << "Informe o nome da empresa fornecedora: ";
     cin.getline(f.empresaNome, sizeof(f.empresaNome));
@@ -169,14 +168,14 @@ void Cadastrar(TabelaFornecedor &tabela, Fornecedor &f) {
     clrscr();
 }
 
-void VerificarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
+void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
     char opcao;
 
         cout << "Confirmação dos dados" << endl << endl;
         cout << "Código: " << f.codigo << endl;
         cout << "Nome da empresa: " << f.empresaNome << endl;
         cout << "Responsável: " << f.responsavel << endl;
-        cout << "Contato: " << f.contato << endl;
+        cout << "Contato: " << f.contato << endl << endl;
         cout << "O cadastro está correto? (s/n): ";
         cin >> opcao;
         clrscr();
@@ -190,23 +189,24 @@ void VerificarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
             ArmazenarDados(tabela, f);
         }else{
             Cadastrar(tabela,f);
-            VerificarCadastro(f,tabela); //chama ela mesma
+            confirmarCadastro(f,tabela); //chama ela mesma
         }
 }
 
 void ArmazenarDados(TabelaFornecedor &tabela, Fornecedor &f) {
     Fornecedor *novo_dados = new Fornecedor[tabela.qtd+1];
 
-    for (int i = 0; i < tabela.qtd; i++) {
-        novo_dados[i] = tabela.dados[i];
+    if(novo_dados == nullptr){
+        cout << "Não foi possível cadastrar outro fornecedor." << endl;
+        return;
     }
 
+    for (int i = 0; i < tabela.qtd; i++)
+        novo_dados[i] = tabela.dados[i];
+
     novo_dados[tabela.qtd] = f;
-
     delete[] tabela.dados;
-
     tabela.dados = novo_dados;
-
     tabela.qtd++;
 }
 
@@ -275,6 +275,7 @@ void editarFornecedor(TabelaFornecedor &tabela)
 
                 achou = true;
                 clrscr();
+
                 cout << "Dados atualizados com sucesso!" << endl;
                 getch();
                 clrscr();
@@ -333,7 +334,7 @@ void excluirFornecedor(TabelaFornecedor &tabela)
 void mostrar(TabelaFornecedor &tabela)
 {
     if(tabela.qtd > 0){
-        cout << "Fornecedores cadastrados:" << endl;
+        cout << "Fornecedores cadastrados:" << endl << endl;
         for (int i = 0; i < tabela.qtd; i++) {
             cout << "Código: " << tabela.dados[i].codigo;
             cout << " | Empresa: " << tabela.dados[i].empresaNome;
@@ -349,16 +350,6 @@ void mostrar(TabelaFornecedor &tabela)
         clrscr();
     }
 }
-
-/*void quantidadeCadastros(TabelaFornecedor &tabela) /* por se tratar de uma verficação muito usada,
-                                                   foi melhor fazer uma função para modularizar o código
-{
-    if(tabela.qtd == 0){
-        cout << "Nenhum fornecedor cadastrado no sistema." << endl;
-        getch();
-        clrscr();
-    }
-}*/
 
 void pesquisar(TabelaFornecedor &tabela)
 {
@@ -382,16 +373,19 @@ void pesquisar(TabelaFornecedor &tabela)
                 cout << "Contato: " << tabela.dados[i].contato << endl << endl;
 
                 achou = true;
+
+            }else{
+                if(!achou){
+                    cout << "Fornecedor não encontrado." << endl;
+                    getch();
+                    clrscr();
+                }
             }
         }
-    }else{
-        cout << "Nenhum fornecedor cadastrado no sistema." << endl;
         getch();
         clrscr();
-    }
-
-    if(!achou){
-        cout << "Fornecedor não encontrado." << endl;
+    }else{
+        cout << "Nenhum fornecedor cadastrado no sistema." << endl;
         getch();
         clrscr();
     }
@@ -403,17 +397,15 @@ void carregarFornecedores(TabelaFornecedor &tabela) {
     if (fornecedoresIn.fail()){
         tabela.qtd = 0;
         tabela.dados = nullptr;
+        return;
     }
 
     fornecedoresIn.read((char*)&tabela.qtd,sizeof(int));
     tabela.dados = new Fornecedor[tabela.qtd];
 
-    for(int i = 0; i < tabela.qtd; i++){
-        fornecedoresIn.read((char*)&tabela.dados[i].codigo, sizeof(int));
-        fornecedoresIn.read(tabela.dados[i].empresaNome, sizeof(tabela.dados[i].empresaNome));
-        fornecedoresIn.read(tabela.dados[i].responsavel,sizeof(tabela.dados[i].responsavel));
-        fornecedoresIn.read(tabela.dados[i].contato, sizeof(tabela.dados[i].contato));
-    }
+    for(int i = 0; i < tabela.qtd; i++)
+        fornecedoresIn.read((char*) &tabela.dados[i], sizeof(tabela.dados[i]));
+
     fornecedoresIn.close();
 }
 
@@ -422,15 +414,13 @@ void salvarFornecedores(const TabelaFornecedor &tabela) {
 
     if (fornecedoresOut.fail()){
         cout << "Erro ao abrir o arquivo de fornecedores para escrita." << endl;
+        return;
     }
 
     fornecedoresOut.write((char*)&tabela.qtd,sizeof(int));
 
-    for(int i = 0; i < tabela.qtd; i++){
-        fornecedoresOut.write((char*)&tabela.dados[i].codigo, sizeof(int));
-        fornecedoresOut.write(tabela.dados[i].empresaNome, sizeof(tabela.dados[i].empresaNome));
-        fornecedoresOut.write(tabela.dados[i].responsavel,sizeof(tabela.dados[i].responsavel));
-        fornecedoresOut.write(tabela.dados[i].contato, sizeof(tabela.dados[i].contato));
-    }
+    for(int i = 0; i < tabela.qtd; i++)
+        fornecedoresOut.write((const char*) &tabela.dados[i], sizeof(tabela.dados[i]));
+
     fornecedoresOut.close();
 }
