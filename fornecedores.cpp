@@ -353,18 +353,18 @@ void mostrar(TabelaFornecedor &tabela)
 
 void pesquisar(TabelaFornecedor &tabela)
 {
-    char fornecedorPesquisa[NOME2_TAM];
+    char fornecedorPesquisa[NOME1_TAM];
     bool achou = false;
 
     if(tabela.qtd > 0){
         cin.ignore();
         cout << "Nome do fornecedor pesquisado: ";
-        cin.getline(fornecedorPesquisa,NOME2_TAM);
+        cin.getline(fornecedorPesquisa,NOME1_TAM);
         clrscr();
 
         cout << "Resultado da pesquisa: " << endl << endl;
         for(int i = 0; i < tabela.qtd; i++){
-            if(strstr(tabela.dados[i].responsavel,
+            if(strstr(tabela.dados[i].empresaNome,
                   fornecedorPesquisa) != 0){ /* strstr() permite que o usuário
 									 não necessite digitar o nome completo*/
                 cout << "Código: " << tabela.dados[i].codigo << endl;
@@ -373,17 +373,15 @@ void pesquisar(TabelaFornecedor &tabela)
                 cout << "Contato: " << tabela.dados[i].contato << endl << endl;
 
                 achou = true;
-
-            }else{
-                if(!achou){
-                    cout << "Fornecedor não encontrado." << endl;
-                    getch();
-                    clrscr();
-                }
             }
         }
+
+        if(!achou)
+            cout << "Fornecedor não encontrado." << endl;
+
         getch();
         clrscr();
+
     }else{
         cout << "Nenhum fornecedor cadastrado no sistema." << endl;
         getch();
