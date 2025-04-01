@@ -102,7 +102,7 @@ void opcao(int &op)
 
 void InicializarTabela(TabelaFornecedor &tabela) {
     tabela.qtd = 0;
-    tabela.dados = nullptr;
+    tabela.dados = NULL;
 }
 
 bool verificarIdExistente(TabelaFornecedor &tabela, int codigo)
@@ -196,7 +196,7 @@ void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
 void ArmazenarDados(TabelaFornecedor &tabela, Fornecedor &f) {
     Fornecedor *novo_dados = new Fornecedor[tabela.qtd+1];
 
-    if(novo_dados == nullptr){
+    if(novo_dados == NULL){
         cout << "Não foi possível cadastrar outro fornecedor." << endl;
         return;
     }
@@ -213,7 +213,7 @@ void ArmazenarDados(TabelaFornecedor &tabela, Fornecedor &f) {
 void LiberarMemoria(TabelaFornecedor &tabela)
 {
     delete[] tabela.dados;
-    tabela.dados = nullptr;
+    tabela.dados = NULL;
 }
 
 void editarFornecedor(TabelaFornecedor &tabela)
@@ -394,7 +394,7 @@ void carregarFornecedores(TabelaFornecedor &tabela) {
 
     if (fornecedoresIn.fail()){
         tabela.qtd = 0;
-        tabela.dados = nullptr;
+        tabela.dados = NULL;
         return;
     }
 
