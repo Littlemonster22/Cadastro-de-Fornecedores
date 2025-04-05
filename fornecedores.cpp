@@ -7,7 +7,7 @@
 using namespace std;
 
 void opcao(int &op);
-void letreiro();
+void entrada();
 void menu();
 void InicializarTabela(TabelaFornecedor &tabela);
 void Cadastrar(TabelaFornecedor &tabela,Fornecedor &f);
@@ -25,7 +25,10 @@ void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela);
 
 int main()
 {
+    textbackground(BLUE);
+    textcolor(WHITE);
     setlocale(LC_ALL,"portuguese");
+
     Fornecedor f;
     TabelaFornecedor tabela;
     int esc;
@@ -33,7 +36,7 @@ int main()
     InicializarTabela(tabela);
     carregarFornecedores(tabela);
 
-    letreiro();
+    entrada();
 
     do{
         menu();
@@ -75,9 +78,9 @@ int main()
     return 0;
 }
 
-void letreiro()
+void entrada()
 {
-    cout << "GESTÃO DE FORNECEDORES" << endl;
+    cout << "CADASTRO DE FORNECEDORES" << endl << endl;
     cout << "Pressione qualquer tecla para continuar...";
     getch();
     clrscr();
@@ -181,7 +184,7 @@ void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
         clrscr();
         cin.ignore();
 
-        if (opcao == 's' || opcao == 'S'){ //caso base da função recursiva
+        if (opcao == 's' || opcao == 'S'){ //caso base da recursão
             cout << "Fornecedor cadastrado com sucesso!" << endl;
             getch();
             clrscr();
@@ -189,7 +192,7 @@ void confirmarCadastro(Fornecedor &f, TabelaFornecedor &tabela) {
             ArmazenarDados(tabela, f);
         }else{
             Cadastrar(tabela,f);
-            confirmarCadastro(f,tabela); //chama ela mesma
+            confirmarCadastro(f,tabela); //chama ela mesma caso queira cadastrar de novo
         }
 }
 
@@ -358,7 +361,7 @@ void pesquisar(TabelaFornecedor &tabela)
 
     if(tabela.qtd > 0){
         cin.ignore();
-        cout << "Nome do fornecedor pesquisado: ";
+        cout << "Nome da empresa pesquisada: ";
         cin.getline(fornecedorPesquisa,NOME1_TAM);
         clrscr();
 
