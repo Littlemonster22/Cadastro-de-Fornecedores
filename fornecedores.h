@@ -5,14 +5,14 @@
 #define NOME2_TAM 50
 #define CONTATO_TAM 15
 
-struct Fornecedor {
+struct Fornecedor { //struct usada para atribuir diferentes dados aos fornecedores 
     int codigo;
     char empresaNome[NOME1_TAM+1];
     char responsavel[NOME2_TAM+1];
     char contato[CONTATO_TAM+1];
 };
 
-struct TabelaFornecedor {
+struct TabelaFornecedor { //servirá para cadastrar os fornecedores em um vetor
     int qtd;
     Fornecedor *dados;
 };
