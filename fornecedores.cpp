@@ -283,16 +283,15 @@ void editarFornecedor(TabelaFornecedor &tabela)
                 getch();
                 clrscr();
                 break;
-            }
         }
+        if(!achou){
+            cout << "O fornecedor não foi localizado!" << endl;
+            getch();
+            clrscr();
+        }
+    }
     }else{
         cout << "Nenhum fornecedor cadastrado no sistema." << endl;
-        getch();
-        clrscr();
-    }
-
-    if(!achou){
-        cout << "O fornecedor não foi localizado!" << endl;
         getch();
         clrscr();
     }
@@ -320,15 +319,14 @@ void excluirFornecedor(TabelaFornecedor &tabela)
                 clrscr();
                 break;
             }
+            if(!achou){
+                cout << "O fornecedor não foi localizado." << endl;
+                getch();
+                clrscr();
+            }
         }
     }else{
         cout << "Nenhum fornecedor cadastrado no sistema." << endl;
-        getch();
-        clrscr();
-    }
-
-    if(!achou){
-        cout << "O fornecedor não foi localizado." << endl;
         getch();
         clrscr();
     }
